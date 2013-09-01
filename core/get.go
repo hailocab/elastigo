@@ -23,13 +23,13 @@ func Get(pretty bool, index string, _type string, id string) (api.BaseResponse, 
 	if err != nil {
 		return retval, err
 	}
-	if err == nil {
-		// marshall into json
-		jsonErr := json.Unmarshal(body, &retval)
-		if jsonErr != nil {
-			return retval, jsonErr
-		}
+
+	// marshall into json
+	jsonErr := json.Unmarshal(body, &retval)
+	if jsonErr != nil {
+		return retval, jsonErr
 	}
+
 	//fmt.Println(body)
 	return retval, err
 }

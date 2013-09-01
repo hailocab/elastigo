@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/mattbaird/elastigo/api"
-	"github.com/mattbaird/elastigo/core"
+	"github.com/hailocab/elastigo/api"
+	"github.com/hailocab/elastigo/core"
 	"log"
 	"os"
 )

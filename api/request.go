@@ -43,6 +43,19 @@ var (
 	Port     string = DefaultPort
 )
 
+type Error struct {
+	Status  int    `json:"status"` // HTTP status code (200, 403, ...)
+	Message string  `json:"error"` // The human readable error message
+}
+
+func (err *Error) Error() string {
+	if err.Status == 0 {
+		return err.Message
+	}
+
+	return fmt.Sprintf("Error [%s] Status [%v]", err.Message, err.Status)
+}
+
 func ElasticSearchRequest(method, path string) (*Request, error) {
 	req, err := http.NewRequest(method, fmt.Sprintf("%s://%s:%s%s", Protocol, Domain, Port, path), nil)
 	if err != nil {

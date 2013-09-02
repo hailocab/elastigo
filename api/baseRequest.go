@@ -3,7 +3,7 @@ package api
 import (
 	//"bytes"
 	"encoding/json"
-	"errors"
+	//"errors"
 	"fmt"
 	"io"
 	"log"
@@ -42,14 +42,17 @@ func DoCommand(method string, url string, data interface{}) ([]byte, error) {
 	}
 	if httpStatusCode > 304 {
 
-		jsonErr := json.Unmarshal(body, &response)
-		if jsonErr == nil {
-			if error, ok := response["error"]; ok {
-				status, _ := response["status"]
-				return body, errors.New(fmt.Sprintf("Error [%s] Status [%v]", error, status))
-			}
+		// Try to unmarshall the returned error into an api.Error
+		var reqErr Error
+		jsonErr := json.Unmarshal(body, &reqErr)
+		if jsonErr != nil {
+			return body, jsonErr
 		}
-		return body, jsonErr
+
+		log.Println(fmt.Sprintf("Error Response from Elasticsearch: [%v] [%s]", reqErr.Status, reqErr.Message))
+
+		return body, &reqErr
+
 	}
 	return body, nil
 }

@@ -16,16 +16,27 @@ import (
 //
 // http://www.elasticsearch.org/guide/reference/api/update.html
 // TODO: finish this, it's fairly complex
-func Update(pretty bool, index string, _type string, id string, data string) (api.BaseResponse, error) {
+func Update(pretty bool, index string, _type string, id string, data string, externalVersion bool, version int64) (api.BaseResponse, error) {
 	var url string
 	var retval api.BaseResponse
-	url = fmt.Sprintf("/%s/%s/%s/_update?%s", index, _type, id, api.Pretty(pretty))
+
+	queryString := api.Pretty(pretty)
+
+	// If we're using external versioning, add this and the version number to index as to the query string
+	if externalVersion {
+		queryString = fmt.Sprintf("%s&version_type=external&version=%v", queryString, version)
+	}
+
+	// Build the final url
+	url = fmt.Sprintf("/%s/%s/%s/_update?%s", index, _type, id, queryString)
+
+	// Execute request
 	body, err := api.DoCommand("POST", url, data)
 	if err != nil {
 		return retval, err
 	}
 
-	// marshall into json
+	// Marshall response into json
 	jsonErr := json.Unmarshal(body, &retval)
 	if jsonErr != nil {
 		return retval, jsonErr

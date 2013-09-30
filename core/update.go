@@ -42,6 +42,5 @@ func Update(pretty bool, index string, _type string, id string, data string, ext
 		return retval, jsonErr
 	}
 
-	fmt.Println(body)
 	return retval, err
 }

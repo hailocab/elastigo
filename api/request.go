@@ -82,10 +82,10 @@ func (err *Error) Error() string {
 
 func ElasticSearchRequest(method, path string) (*Request, error) {
 
-	// Setup the hostpool on our first run
-	once.Do(SetupHostpool)
+	// Initialise a hostpool on our first run
+	once.Do(initialiseHostPool)
 
-	// Get a host from the Host Pool
+	// Get a host from the host pool
 	hr := hp.Get()
 
 	// Get the final host and port
@@ -159,8 +159,19 @@ func (r *Request) Do(v interface{}) (int, []byte, error) {
 	return res.StatusCode, bodyBytes, nil
 }
 
-// Set up the host pool to be used
-func SetupHostpool() {
+func SetHosts(newhosts []string) {
+
+	// Store the new host list
+	Hosts = newhosts
+
+	// Reinitialise the host pool
+	// Pretty naive as this will nuke the current hostpool, and therefore reset any scoring
+	initialiseHostPool()
+
+}
+
+// Initialise the host pool to be used
+func initialiseHostPool() {
 
 	// If no hosts are set, fallback to defaults
 	if len(Hosts) == 0 {

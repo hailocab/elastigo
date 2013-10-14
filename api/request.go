@@ -175,7 +175,7 @@ func initialiseHostPool() {
 
 	// If no hosts are set, fallback to defaults
 	if len(Hosts) == 0 {
-		Hosts = append(Hosts, fmt.Sprintf("%s:%s", DefaultDomain, DefaultPort))
+		Hosts = append(Hosts, fmt.Sprintf("%s:%s", Domain, Port))
 	}
 
 	// Epsilon Greedy is an algorithm that allows HostPool not only to track failure state,

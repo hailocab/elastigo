@@ -19,7 +19,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	hostpool "github.com/bitly/go-hostpool"
+	hostpool "github.com/hailocab/go-hostpool"
 	"io"
 	"io/ioutil"
 	"log"
@@ -187,7 +187,12 @@ func initialiseHostPool() {
 	//
 	// A good overview of Epsilon Greedy is here http://stevehanov.ca/blog/index.php?id=132
 
-	hp = hostpool.NewEpsilonGreedy(Hosts, DecayDuration, &hostpool.LinearEpsilonValueCalculator{})
+	// If the host pool is already initialised set the hosts.
+	if hp != nil {
+		hp.SetHosts(Hosts)
+	} else {
+		hp = hostpool.NewEpsilonGreedy(Hosts, DecayDuration, &hostpool.LinearEpsilonValueCalculator{})
+	}
 
 }
 
